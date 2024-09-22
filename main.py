@@ -104,7 +104,11 @@ dp.message.register(send_price, lambda message: message.text in ["Курс BTC",
 # Настройка планировщика задач
 scheduler = AsyncIOScheduler()
 logging.info("Запуск планировщика задач")
-scheduler.add_job(scheduled_price_check, "interval", minutes=1)  # Для тестирования, запрос раз в минуту
+
+def schedule_task():
+    asyncio.create_task(scheduled_price_check())
+
+scheduler.add_job(schedule_task, "interval", minutes=1)  # Для тестирования, запрос раз в минуту
 scheduler.start()
 
 async def main():
@@ -113,3 +117,4 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
+
